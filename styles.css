@@ -1,0 +1,436 @@
+:root {
+  --bg-page: #050507;
+  --bg-calculator: #0b0b0e;
+  --bg-display: #050507;
+  --bg-btn-black: #121216;
+  --bg-btn-black-hover: #1b1b22;
+  --bg-btn-black-active: #24242d;
+  --bg-btn-utility: #0e0e12;
+  --bg-btn-utility-hover: #191920;
+
+  --yellow-primary: #ffd600;
+  --yellow-hover: #ffe033;
+  --yellow-active: #e6c100;
+  --yellow-glow: rgba(255, 214, 0, 0.28);
+  --yellow-border: rgba(255, 214, 0, 0.42);
+
+  --white-pure: #ffffff;
+  --white-muted: rgba(255, 255, 255, 0.68);
+  --black-pure: #000000;
+
+  --border-subtle: #23232b;
+  --border-strong: #2f2f3a;
+
+  --radius-xl: 24px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255, 214, 0, 0.07), transparent 55%),
+    radial-gradient(circle at 85% 90%, rgba(255, 255, 255, 0.03), transparent 45%);
+  color: var(--white-pure);
+  font-family: var(--font-sans);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.app-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calculator {
+  background-color: var(--bg-calculator);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 214, 0, 0.08);
+  padding: 22px;
+  width: 100%;
+  max-width: 440px;
+  transition: max-width 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+}
+
+/* Header & Mode Switch */
+.calc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.status-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge {
+  background-color: var(--bg-btn-utility);
+  color: var(--yellow-primary);
+  border: 1px solid var(--yellow-border);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode-switch-btn,
+.history-toggle-btn {
+  padding: 7px 12px;
+  font-size: 0.8rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mode-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* Display Screen */
+.display-container {
+  background-color: var(--bg-display);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  min-height: 118px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  overflow: hidden;
+  box-shadow: inset 0 4px 16px rgba(0, 0, 0, 0.85);
+}
+
+.expression-line {
+  width: 100%;
+  min-height: 24px;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--yellow-primary);
+  opacity: 0.9;
+  word-break: break-all;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.expression-line::-webkit-scrollbar {
+  display: none;
+}
+
+/* Answer is strictly BOLD and WHITE */
+.answer-line {
+  width: 100%;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--white-pure);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  word-break: break-all;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  user-select: text;
+}
+
+.answer-line::-webkit-scrollbar {
+  display: none;
+}
+
+.answer-line.compact {
+  font-size: 1.85rem;
+}
+
+.answer-line.extra-compact {
+  font-size: 1.4rem;
+}
+
+/* Collapsible History Panel */
+.history-panel {
+  background-color: #08080b;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin-bottom: 14px;
+  max-height: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--yellow-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 0.72rem;
+  border-radius: 6px;
+}
+
+.history-list {
+  list-style: none;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 4px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background-color: var(--bg-btn-black);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.history-item:hover {
+  border-color: var(--yellow-primary);
+}
+
+.history-expr {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--yellow-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-res {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--white-pure);
+  flex-shrink: 0;
+}
+
+.history-empty {
+  font-size: 0.82rem;
+  color: var(--white-muted);
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* Keypad Layout */
+.keypad-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scientific-pad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Hide scientific pad when in Basic mode */
+.calculator[data-mode="basic"] .scientific-pad {
+  display: none;
+}
+
+.calculator[data-mode="basic"] {
+  max-width: 380px;
+}
+
+.basic-pad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+/* Base Button Styling */
+.btn {
+  appearance: none;
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.14s ease,
+    border-color 0.14s ease,
+    transform 0.08s ease,
+    box-shadow 0.14s ease;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--yellow-primary);
+  outline-offset: 2px;
+}
+
+/* 1. White digits in Black buttons */
+.btn-digit {
+  background-color: var(--bg-btn-black);
+  color: var(--white-pure);
+  height: 58px;
+  border-radius: var(--radius-md);
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
+}
+
+.btn-digit:hover {
+  background-color: var(--bg-btn-black-hover);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.btn-digit:active {
+  background-color: var(--bg-btn-black-active);
+}
+
+/* 2. Clear, Clear All, Switch Mode, Scientific & Operator buttons: Black with Yellow text/symbols */
+.btn-utility {
+  background-color: var(--bg-btn-utility);
+  color: var(--yellow-primary);
+  border-color: var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
+}
+
+.scientific-pad .btn-utility {
+  height: 44px;
+  font-size: 0.9rem;
+  border-radius: 11px;
+}
+
+.basic-pad .btn-utility {
+  height: 58px;
+  font-size: 1.05rem;
+}
+
+.basic-pad .btn-operator {
+  font-size: 1.45rem;
+  font-family: var(--font-mono);
+}
+
+#keypadModeBtn {
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  border-color: var(--yellow-border);
+}
+
+.btn-utility:hover {
+  background-color: var(--bg-btn-utility-hover);
+  border-color: var(--yellow-primary);
+  box-shadow: 0 0 12px var(--yellow-glow);
+}
+
+.btn-utility.active-toggle {
+  border-color: var(--yellow-primary);
+  box-shadow: inset 0 0 0 1.5px var(--yellow-primary), 0 0 12px var(--yellow-glow);
+}
+
+/* 3. "=" Button: Yellow background with Black "=" symbol */
+.btn-equals {
+  background-color: var(--yellow-primary);
+  color: var(--black-pure);
+  border: 1px solid var(--yellow-primary);
+  height: 58px;
+  border-radius: var(--radius-md);
+  font-size: 1.65rem;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  box-shadow: 0 4px 16px var(--yellow-glow);
+}
+
+.btn-equals:hover {
+  background-color: var(--yellow-hover);
+  border-color: var(--yellow-hover);
+  box-shadow: 0 6px 22px rgba(255, 214, 0, 0.38);
+}
+
+.btn-equals:active {
+  background-color: var(--yellow-active);
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 420px) {
+  body {
+    padding: 10px;
+  }
+
+  .calculator {
+    padding: 16px;
+  }
+
+  .basic-pad .btn-digit,
+  .basic-pad .btn-utility,
+  .basic-pad .btn-equals {
+    height: 52px;
+  }
+
+  .scientific-pad .btn-utility {
+    height: 40px;
+    font-size: 0.82rem;
+  }
+}
+

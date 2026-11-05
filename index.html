@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scientific Calculator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-container">
+    <section class="calculator" id="calculator" data-mode="scientific" aria-label="Scientific Calculator">
+      <!-- Top Bar: Mode Switch & Angle Status -->
+      <header class="calc-header">
+        <div class="status-badges">
+          <span class="badge" id="angleBadge" title="Current Angle Unit">DEG</span>
+          <span class="badge hidden" id="secondBadge" title="Secondary Functions Active">2nd</span>
+        </div>
+
+        <div class="header-controls">
+          <button
+            type="button"
+            class="btn btn-utility mode-switch-btn"
+            id="modeToggleBtn"
+            aria-label="Switch between Basic and Scientific calculator"
+            title="Switch between Basic and Scientific mode"
+          >
+            <span class="mode-icon">⇄</span>
+            <span id="modeToggleLabel">Basic Mode</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-utility history-toggle-btn"
+            id="historyToggleBtn"
+            aria-label="Toggle calculation history"
+            title="History"
+          >
+            HIST
+          </button>
+        </div>
+      </header>
+
+      <!-- Display Screen -->
+      <div class="display-container" aria-live="polite">
+        <div class="expression-line" id="expressionDisplay"></div>
+        <div class="answer-line" id="answerDisplay">0</div>
+      </div>
+
+      <!-- Optional Collapsible History Panel -->
+      <div class="history-panel hidden" id="historyPanel">
+        <div class="history-header">
+          <span>Calculation History</span>
+          <button type="button" class="btn btn-utility btn-sm" id="clearHistoryBtn">Clear History</button>
+        </div>
+        <ul class="history-list" id="historyList">
+          <li class="history-empty">No calculations yet</li>
+        </ul>
+      </div>
+
+      <!-- Keypad Area -->
+      <div class="keypad-wrapper">
+        <!-- Scientific Keypad Section (Visible in Scientific Mode) -->
+        <div class="scientific-pad" id="scientificPad">
+          <button type="button" class="btn btn-utility" data-action="second" id="secondBtn">2nd</button>
+          <button type="button" class="btn btn-utility" data-action="deg-rad" id="degRadBtn">DEG</button>
+          <button type="button" class="btn btn-utility" data-action="sin" data-primary="sin" data-secondary="sin⁻¹">sin</button>
+          <button type="button" class="btn btn-utility" data-action="cos" data-primary="cos" data-secondary="cos⁻¹">cos</button>
+          <button type="button" class="btn btn-utility" data-action="tan" data-primary="tan" data-secondary="tan⁻¹">tan</button>
+
+          <button type="button" class="btn btn-utility" data-action="pow" data-primary="xʸ" data-secondary="ʸ√x">xʸ</button>
+          <button type="button" class="btn btn-utility" data-action="log" data-primary="log" data-secondary="10ˣ">log</button>
+          <button type="button" class="btn btn-utility" data-action="ln" data-primary="ln" data-secondary="eˣ">ln</button>
+          <button type="button" class="btn btn-utility" data-action="open-paren">(</button>
+          <button type="button" class="btn btn-utility" data-action="close-paren">)</button>
+
+          <button type="button" class="btn btn-utility" data-action="sqrt" data-primary="√x" data-secondary="∛x">√x</button>
+          <button type="button" class="btn btn-utility" data-action="square" data-primary="x²" data-secondary="x³">x²</button>
+          <button type="button" class="btn btn-utility" data-action="factorial">x!</button>
+          <button type="button" class="btn btn-utility" data-action="reciprocal">1/x</button>
+          <button type="button" class="btn btn-utility" data-action="abs">|x|</button>
+
+          <button type="button" class="btn btn-utility" data-action="pi">π</button>
+          <button type="button" class="btn btn-utility" data-action="euler">e</button>
+          <button type="button" class="btn btn-utility" data-action="exp">EXP</button>
+          <button type="button" class="btn btn-utility" data-action="mod">mod</button>
+          <button type="button" class="btn btn-utility" data-action="rand">Rand</button>
+        </div>
+
+        <!-- Basic / Core Keypad Section -->
+        <div class="basic-pad">
+          <!-- Row 1: Clear All, Clear, Switch Mode, Divide -->
+          <button type="button" class="btn btn-utility" data-action="clear-all" title="Clear All (Esc)">AC</button>
+          <button type="button" class="btn btn-utility" data-action="clear" title="Clear / Backspace (Backspace)">C</button>
+          <button
+            type="button"
+            class="btn btn-utility"
+            data-action="toggle-mode"
+            id="keypadModeBtn"
+            title="Switch between Basic and Scientific Calculator"
+          >
+            SCI/BAS
+          </button>
+          <button type="button" class="btn btn-utility btn-operator" data-action="operator" data-value="/">÷</button>
+
+          <!-- Row 2: 7, 8, 9, Multiply -->
+          <button type="button" class="btn btn-digit" data-digit="7">7</button>
+          <button type="button" class="btn btn-digit" data-digit="8">8</button>
+          <button type="button" class="btn btn-digit" data-digit="9">9</button>
+          <button type="button" class="btn btn-utility btn-operator" data-action="operator" data-value="*">×</button>
+
+          <!-- Row 3: 4, 5, 6, Subtract -->
+          <button type="button" class="btn btn-digit" data-digit="4">4</button>
+          <button type="button" class="btn btn-digit" data-digit="5">5</button>
+          <button type="button" class="btn btn-digit" data-digit="6">6</button>
+          <button type="button" class="btn btn-utility btn-operator" data-action="operator" data-value="-">−</button>
+
+          <!-- Row 4: 1, 2, 3, Add -->
+          <button type="button" class="btn btn-digit" data-digit="1">1</button>
+          <button type="button" class="btn btn-digit" data-digit="2">2</button>
+          <button type="button" class="btn btn-digit" data-digit="3">3</button>
+          <button type="button" class="btn btn-utility btn-operator" data-action="operator" data-value="+">+</button>
+
+          <!-- Row 5: Percent/Negate, 0, Decimal, Equals -->
+          <button type="button" class="btn btn-utility" data-action="percent" title="Percentage">%</button>
+          <button type="button" class="btn btn-digit" data-digit="0">0</button>
+          <button type="button" class="btn btn-digit" data-action="decimal">.</button>
+          <button type="button" class="btn btn-equals" data-action="equals" title="Calculate (=)">=</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
